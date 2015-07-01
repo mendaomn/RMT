@@ -53,3 +53,5 @@ in case of special requests (e.g. clients wants to change an ingredient)
 
 - send food order to the kitchen
 - send beverages order to the bar
+- order contains table id, room id
+	prints in format ROOM-ID:TABLE-ID

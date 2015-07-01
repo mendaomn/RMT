@@ -18,7 +18,11 @@ define(['jquery', 'modules/order', 'modules/item'],
 
 			item2.addNote("molto ghiaccio");
 
+			item1.addIngredient("prosciutto");
+
 			console.log("Order is now", order);
+
+			order.computeTotal();
 		};
 
 		return Loader;

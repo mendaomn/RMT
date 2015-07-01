@@ -1,5 +1,5 @@
-define([], 
-	function(){
+define(['jquery'], 
+	function($){
 
 		Order = function(){
 			this.items = new Array();
@@ -14,6 +14,14 @@ define([],
 		Order.prototype.removeItem = function(item){
 			this.items.remove(item);
 			console.log("Removed",item);
+		}
+
+		Order.prototype.computeTotal = function(){
+			var sum = 0;
+			$.each(this.items, function(index, value){
+				sum += value.getPrice();
+			});
+			console.log("Total", sum);
 		}
 
 		return Order;

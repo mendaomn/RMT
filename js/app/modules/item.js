@@ -12,6 +12,19 @@ define([],
 			console.log("Note added", note);
 		};
 
+		Item.prototype.addIngredient = function(ingredient){
+			if (!this.additions)
+				this.additions = new Array();
+			this.additions.push(ingredient);
+		};
+
+		Item.prototype.getPrice = function(){
+			var additionalCost = 0;
+			if (this.additions)
+				additionalCost = this.additions.length*1; 
+			return this.price + additionalCost;
+		};
+
 		return Item;
 	}
 );

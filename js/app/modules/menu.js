@@ -2,7 +2,7 @@ define([],
 	function(){
 
 		Menu = function(){
-			console.log("New order generated");
+			console.log("New menu generated");
 		}
 
 		Menu.prototype.addItem = function(item){
@@ -18,3 +18,14 @@ define([],
 		return Menu;
 	}
 );
+
+/*
+
+- add section (primi, secondi..)
+- add item to section
+- remove item
+- search?
+- list items
+- list sections
+
+*/
