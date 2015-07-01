@@ -1,30 +1,42 @@
-define(['jquery', 'modules/order', 'modules/item'], 
-	function($, Order, Item){
+define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
+    function($, Order, Item, Menu) {
 
-		Loader = function(){
-			console.log("Loader generated");
-		}
+        Loader = function() {
+            console.log("Loader generated");
+        }
 
-		Loader.prototype.boot = function(){
-			// generate order and add items
-			var order = new Order();
+        Loader.prototype.boot = function() {
+            // generate menu
+            var menu = new Menu();
 
-			var item1 = new Item("pizza", 12);
-			var item2 = new Item("birra", 5);
-			item2.addNote("ghiaccio");
+            menu.addSection("pizze");
+            menu.addSection("panini");
+            menu.addSection("secondi");
 
-			order.addItem(item1);
-			order.addItem(item2);
+            menu.addItem("pizze", new Item("pizza", 9));
+            menu.addItem("panini", new Item("house", 7));
 
-			item2.addNote("molto ghiaccio");
+            // generate order
+            var order = new Order();
 
-			item1.addIngredient("prosciutto");
+            var item1 = menu.getItem("pizza");
+            var item2 = menu.getItem("house");
+            order.addItem(item1);
+            order.addItem(item2);
 
-			console.log("Order is now", order);
+            item2.addNote("molto ghiaccio");
+            item1.addIngredient("prosciutto");
 
-			order.computeTotal();
-		};
+            // output 
+            console.log("Order is now", order);
 
-		return Loader;
-	}
+            // cash register
+            order.computeTotal();
+
+            console.log(menu.getSectionsList());
+            console.log(menu.getItemsList());
+        };
+
+        return Loader;
+    }
 );

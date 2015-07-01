@@ -1,22 +1,77 @@
-define([], 
-	function(){
+define(['jquery'],
+    function($) {
 
-		Menu = function(){
-			console.log("New menu generated");
-		}
+        Menu = function() {
+            console.log("New menu generated");
+        }
 
-		Menu.prototype.addItem = function(item){
-			this.items.append(item);
-			console.log("Added ",item);
-		};
+        Menu.prototype.addSection = function(name) {
+            if (!this.sections)
+                this.sections = new Array();
+            this.sections.push({
+                name: name
+            });
+        };
 
-		Menu.prototype.removeItem = function(item){
-			this.items.remove(item);
-			console.log("Removed",item);
-		}
+        Menu.prototype.addItem = function(sectionName, item) {
+            var section = this.getSection(sectionName);
+            if (!section.items)
+                section.items = new Array();
+            section.items.push(item);
+            console.log("Added", item, "to section " + sectionName.toUpperCase());
+        };
 
-		return Menu;
-	}
+        Menu.prototype.removeItem = function(item) {
+
+        };
+
+        Menu.prototype.getSection = function(sectionName) {
+            var section;
+            $.each(this.sections, function(index, value) {
+                if (value.name == sectionName) {
+                    section = value;
+                    return false;
+                }
+            });
+            return section;
+        };
+
+        Menu.prototype.getItem = function(itemName) {
+            var item;
+            $.each(this.sections, function(index, value) {
+                $.each(value.items, function(index, value) {
+                    if (value.getName() == itemName) {
+                        item = value;
+                        return false;
+                    }
+                });
+                if (item)
+                    return false;
+            });
+            return $.extend(true, {}, item);
+        };
+
+        Menu.prototype.loadFromFile = function(file) {
+
+        };
+
+        Menu.prototype.getSectionsList = function(){
+        	return $.map(this.sections, function(value, index){
+        		return value.name;
+        	});
+        };
+
+        Menu.prototype.getItemsList = function(){
+        	return $.map(this.sections, function(value, index){
+        		if (value.items)
+        			return $.map(value.items, function(value, index){
+        				return value;
+        			});
+        	});
+        };
+
+        return Menu;
+    }
 );
 
 /*

@@ -7,7 +7,7 @@ require.config({
     }
 });
 
-require(['controllers/loader'], function(Loader){
+require(['controllers/loader'], function(Loader) {
     var loader = new Loader();
     loader.boot();
 });
