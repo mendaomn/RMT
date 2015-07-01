@@ -35,6 +35,9 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
 
             console.log(menu.getSectionsList());
             console.log(menu.getItemsList());
+
+            // try file loader
+            menu.loadFromFile("../../file.csv");
         };
 
         return Loader;

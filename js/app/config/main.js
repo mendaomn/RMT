@@ -3,7 +3,8 @@ require.config({
     baseUrl: 'js/app',
 
     paths: {
-        jquery: ["../../bower_components/jquery/dist/jquery.min"]
+        jquery: ["../../bower_components/jquery/dist/jquery.min"],
+        papaparse: ["../../app/bower_components/papaparse/papaparse.min"]
     }
 });
 

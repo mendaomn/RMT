@@ -1,5 +1,5 @@
-define(['jquery'],
-    function($) {
+define(['jquery', 'papaparse'],
+    function($, Papa) {
 
         Menu = function() {
             console.log("New menu generated");
@@ -52,7 +52,12 @@ define(['jquery'],
         };
 
         Menu.prototype.loadFromFile = function(file) {
-
+            Papa.parse(file, {
+                download: true,
+                complete: function(results) {
+                    console.log("Finished:", results.data);
+                }
+            });
         };
 
         Menu.prototype.getSectionsList = function(){
