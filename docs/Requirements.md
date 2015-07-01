@@ -6,6 +6,7 @@
 
 RMT should be able to 
 
+- manage rooms and tables
 - take order
 - send order to both kitchen and cashier
 - print bill or something
@@ -27,6 +28,20 @@ There should exist at least 2 ways of using the app
 	- manage stocks
 
 ## Functional requirements
+
+### Rooms and tables
+
+- every room has an ID
+- every table has an ID inside the room
+---> Room #A : Table #1 <---
+
+This is probably the first screen, waiter selects room and table
+
+- every table has its associated order
+- new order for the table when new people come
+
+Keep an history of orders in table (?)
+Keep an history of orders in general
 
 ### Take order
 
