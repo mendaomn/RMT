@@ -1,5 +1,5 @@
-define(['jquery', 'papaparse'],
-    function($, Papa) {
+define(['jquery', 'papaparse', 'modules/item'],
+    function($, Papa, Item) {
 
         Menu = function() {
             console.log("New menu generated");
@@ -52,12 +52,42 @@ define(['jquery', 'papaparse'],
         };
 
         Menu.prototype.loadFromFile = function(file) {
+            // Do this differently:
+            // strip away all empty cells
+            // then distinguish counting number of non-empty cells
+            // 1 element: section
+            // 2 elements: item
+
+            var that = this;
             Papa.parse(file, {
                 download: true,
                 complete: function(results) {
-                    console.log("Finished:", results.data);
+                    var currSection;
+                    $.each(results.data, function(index, value){
+                        if (that.isSection(value)){
+                            currSection = value[0];
+                            that.addSection(value[0]);
+                        }
+                        else{
+                            console.log(value);
+                            var item = new Item(value[0], value[1]);
+                            that.addItem(currSection, item);
+                        }
+                    });
                 }
             });
+        };
+
+        Menu.prototype.isSection = function(array){
+            var status = true;
+            if (array[0] == "") return false;
+            $.each(array, function(index, value){
+                if (index != 0 && value != ""){
+                    status = false;
+                    return false;
+                }
+            });
+            return status;
         };
 
         Menu.prototype.getSectionsList = function(){

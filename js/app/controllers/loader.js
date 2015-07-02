@@ -9,12 +9,9 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
             // generate menu
             var menu = new Menu();
 
-            menu.addSection("pizze");
-            menu.addSection("panini");
-            menu.addSection("secondi");
-
-            menu.addItem("pizze", new Item("pizza", 9));
-            menu.addItem("panini", new Item("house", 7));
+            menu.loadFromFile("../../menu_parsable.csv");
+            console.log("Menu loaded from file");
+            console.log(menu);
 
             // generate order
             var order = new Order();
@@ -36,8 +33,7 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
             console.log(menu.getSectionsList());
             console.log(menu.getItemsList());
 
-            // try file loader
-            menu.loadFromFile("../../file.csv");
+
         };
 
         return Loader;

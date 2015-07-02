@@ -43,5 +43,9 @@ For final user:
 - check satisfaction
 - let them query for more
 
+## Depolyment
+
+run http-server --cors in parent folder
+
 
 
