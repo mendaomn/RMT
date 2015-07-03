@@ -52,57 +52,52 @@ define(['jquery', 'papaparse', 'modules/item'],
         };
 
         Menu.prototype.loadFromFile = function(file) {
-            // Do this differently:
-            // strip away all empty cells
-            // then distinguish counting number of non-empty cells
-            // 1 element: section
-            // 2 elements: item
-
             var that = this;
             Papa.parse(file, {
                 download: true,
                 complete: function(results) {
                     var currSection;
-                    $.each(results.data, function(index, value){
-                        if (that.isSection(value)){
-                            currSection = value[0];
-                            that.addSection(value[0]);
-                        }
-                        else{
-                            console.log(value);
-                            var item = new Item(value[0], value[1]);
-                            that.addItem(currSection, item);
-                        }
+                    console.log(results.data);
+                    $.each(results.data, function(index, value) {
+                            var i, len = value.length;
+                            for(i = 0; i < len; i++ )
+                                value[i] && value.push(value[i]);
+                            value.splice(0 , len); 
+                            if (value.length == 0){
+                                console.log(value, "empty");
+                                return;
+                            }
+                            if (that.isSection(value)) {
+                                console.log(value, "is a section");
+                                currSection = value[0];
+                                that.addSection(value[0]);
+                            } else {
+                                console.log(value, "is an item");
+                                var item = new Item(value[0], value[1]);
+                                that.addItem(currSection, item);
+                            }
+                        });
+                    }
+                });
+        };
+
+        Menu.prototype.isSection = function(array) {
+            return array.length == 1;
+        };
+
+        Menu.prototype.getSectionsList = function() {
+            return $.map(this.sections, function(value, index) {
+                return value.name;
+            });
+        };
+
+        Menu.prototype.getItemsList = function() {
+            return $.map(this.sections, function(value, index) {
+                if (value.items)
+                    return $.map(value.items, function(value, index) {
+                        return value;
                     });
-                }
             });
-        };
-
-        Menu.prototype.isSection = function(array){
-            var status = true;
-            if (array[0] == "") return false;
-            $.each(array, function(index, value){
-                if (index != 0 && value != ""){
-                    status = false;
-                    return false;
-                }
-            });
-            return status;
-        };
-
-        Menu.prototype.getSectionsList = function(){
-        	return $.map(this.sections, function(value, index){
-        		return value.name;
-        	});
-        };
-
-        Menu.prototype.getItemsList = function(){
-        	return $.map(this.sections, function(value, index){
-        		if (value.items)
-        			return $.map(value.items, function(value, index){
-        				return value;
-        			});
-        	});
         };
 
         return Menu;

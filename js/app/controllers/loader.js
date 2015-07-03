@@ -14,7 +14,7 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
             console.log(menu);
 
             // generate order
-            var order = new Order();
+            /*var order = new Order();
 
             var item1 = menu.getItem("pizza");
             var item2 = menu.getItem("house");
@@ -32,7 +32,7 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
 
             console.log(menu.getSectionsList());
             console.log(menu.getItemsList());
-
+            */
 
         };
 
