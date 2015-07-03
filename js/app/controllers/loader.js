@@ -9,31 +9,34 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
             // generate menu
             var menu = new Menu();
 
-            menu.loadFromFile("../../menu_parsable.csv");
-            console.log("Menu loaded from file");
-            console.log(menu);
+            var p = menu.loadFromFile("../../menu_parsable.csv");
+            p.then(function(){
+                console.log("Menu loaded from file");
+                console.log(menu);               
 
-            // generate order
-            /*var order = new Order();
+                // generate order
+                var order = new Order();
 
-            var item1 = menu.getItem("pizza");
-            var item2 = menu.getItem("house");
-            order.addItem(item1);
-            order.addItem(item2);
+                var item1 = menu.getItem("margherita");
+                var item2 = menu.getItem("house");
+                var item3 = menu.getItem("bIrrA1");
+                order.addItem(item1);
+                order.addItem(item2);
+                order.addItem(item3);
 
-            item2.addNote("molto ghiaccio");
-            item1.addIngredient("prosciutto");
+                item2.addNote("molto ghiaccio");
+                item1.addIngredient("prosciutto");
 
-            // output 
-            console.log("Order is now", order);
+                // output 
+                console.log("Order is now", order);
 
-            // cash register
-            order.computeTotal();
+                // cash register
+                order.computeTotal();
 
-            console.log(menu.getSectionsList());
-            console.log(menu.getItemsList());
-            */
-
+                console.log("sections", menu.getSectionsList());
+                console.log("items", menu.getItemsList());
+    
+            });
         };
 
         return Loader;

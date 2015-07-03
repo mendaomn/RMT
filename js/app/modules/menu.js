@@ -40,7 +40,7 @@ define(['jquery', 'papaparse', 'modules/item'],
             var item;
             $.each(this.sections, function(index, value) {
                 $.each(value.items, function(index, value) {
-                    if (value.getName() == itemName) {
+                    if (value.getName().toUpperCase() == itemName.toUpperCase()) {
                         item = value;
                         return false;
                     }
@@ -53,32 +53,32 @@ define(['jquery', 'papaparse', 'modules/item'],
 
         Menu.prototype.loadFromFile = function(file) {
             var that = this;
-            Papa.parse(file, {
-                download: true,
-                complete: function(results) {
-                    var currSection;
-                    console.log(results.data);
-                    $.each(results.data, function(index, value) {
+            var promise = new Promise(function(resolve, reject) {
+                Papa.parse(file, {
+                    download: true,
+                    complete: function(results) {
+                        var currSection;
+                        $.each(results.data, function(index, value) {
                             var i, len = value.length;
-                            for(i = 0; i < len; i++ )
+                            for (i = 0; i < len; i++)
                                 value[i] && value.push(value[i]);
-                            value.splice(0 , len); 
-                            if (value.length == 0){
-                                console.log(value, "empty");
+                            value.splice(0, len);
+                            if (value.length == 0) {
                                 return;
                             }
                             if (that.isSection(value)) {
-                                console.log(value, "is a section");
                                 currSection = value[0];
                                 that.addSection(value[0]);
                             } else {
-                                console.log(value, "is an item");
                                 var item = new Item(value[0], value[1]);
                                 that.addItem(currSection, item);
                             }
                         });
+                        resolve();
                     }
                 });
+            });
+            return promise;
         };
 
         Menu.prototype.isSection = function(array) {

@@ -3,7 +3,7 @@ define([],
 
         Item = function(name, price) {
             this.name = name;
-            this.price = price;
+            this.price = parseFloat(price.split(',').join('.'));
             console.log("New item generated", this);
         }
 
