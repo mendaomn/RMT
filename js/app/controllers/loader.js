@@ -18,6 +18,7 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'views/view']
 
                 view = new View();
                 view.populateMenu(menu);
+                $(".menu_entry").on("click", view.onclickHandler);
 
                 that.runOrder(menu);               
     
