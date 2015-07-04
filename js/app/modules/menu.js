@@ -101,9 +101,9 @@ define(['jquery', 'papaparse', 'modules/item'],
         };
 
         Menu.prototype.getSectionItems = function(sectionName) {
-            return this.sections.find(function (element, index, array){
-                    return element.name == sectionName;
-            });
+            return $.grep(this.sections, function (section, i){
+                    return section.name == sectionName;
+            })[0].items;
         };
 
         return Menu;

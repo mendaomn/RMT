@@ -4,7 +4,8 @@ require.config({
 
     paths: {
         jquery: ["../../bower_components/jquery/dist/jquery.min"],
-        papaparse: ["../../app/bower_components/papaparse/papaparse.min"]
+        papaparse: ["../../app/bower_components/papaparse/papaparse.min"],
+    	jsviews: ["../../app/bower_components/jsviews/jsviews.min"]
     }
 });
 

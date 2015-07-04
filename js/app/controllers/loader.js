@@ -1,4 +1,4 @@
-define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'modules/view'],
+define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'views/view'],
     function($, Order, Item, Menu) {
 
         Loader = function() {
@@ -17,7 +17,7 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'modules/view
                 console.log(menu);
 
                 view = new View();
-                view.populateMenu();
+                view.populateMenu(menu);
 
                 that.runOrder(menu);               
     
