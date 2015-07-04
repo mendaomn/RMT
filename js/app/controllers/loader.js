@@ -1,4 +1,4 @@
-define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
+define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'modules/view'],
     function($, Order, Item, Menu) {
 
         Loader = function() {
@@ -6,38 +6,47 @@ define(['jquery', 'modules/order', 'modules/item', 'modules/menu'],
         }
 
         Loader.prototype.boot = function() {
+            var that = this;
             // generate menu
             var menu = new Menu();
+            var view;
 
             var p = menu.loadFromFile("../../menu_parsable.csv");
             p.then(function(){
                 console.log("Menu loaded from file");
-                console.log(menu);               
+                console.log(menu);
 
-                // generate order
-                var order = new Order();
+                view = new View();
+                view.populateMenu();
 
-                var item1 = menu.getItem("margherita");
-                var item2 = menu.getItem("house");
-                var item3 = menu.getItem("bIrrA1");
-                order.addItem(item1);
-                order.addItem(item2);
-                order.addItem(item3);
-
-                item2.addNote("molto ghiaccio");
-                item1.addIngredient("prosciutto");
-
-                // output 
-                console.log("Order is now", order);
-
-                // cash register
-                order.computeTotal();
-
-                console.log("sections", menu.getSectionsList());
-                console.log("items", menu.getItemsList());
+                that.runOrder(menu);               
     
             });
         };
+
+        Loader.prototype.runOrder = function(menu){
+             // generate order
+            var order = new Order();
+
+            var item1 = menu.getItem("margherita");
+            var item2 = menu.getItem("house");
+            var item3 = menu.getItem("bIrrA1");
+            order.addItem(item1);
+            order.addItem(item2);
+            order.addItem(item3);
+
+            item2.addNote("molto ghiaccio");
+            item1.addIngredient("prosciutto");
+
+            // output 
+            console.log("Order is now", order);
+
+            // cash register
+            order.computeTotal();
+
+            console.log("sections", menu.getSectionsList());
+            console.log("items", menu.getItemsList());
+        }
 
         return Loader;
     }
