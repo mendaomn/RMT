@@ -1,36 +1,50 @@
-define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'jsviews'],
-    function($, Order, Item, Menu, JsViews) {
+// hBarChart.js
+// -------
+define(["jquery", "backbone", 'jsviews'],
 
-        View = function() {
-            this.el = "#menu_list";
-            console.log("View generated");
-        }
+    function($, Backbone) {
 
-        View.prototype.populateMenu = function(menu) {
-            var that = this;
-            // loop through sections
-            // build list containing all items in section
-            // build list containing such lists
-            var sectionsList = menu.getSectionsList();
-            var template = "<li class=\"menu_entry\" id=\"item{{:entry_id}}\">{{:item.name}} {{:item.price}}</li>"
-            var compiledTemplate = $.templates(template);
-            var entry_id = 0;
-            $.each(sectionsList, function(i, sectionName){
-                var sectionItems = menu.getSectionItems(sectionName);
-                console.log(sectionItems);
-                $.each(sectionItems, function(i, item){
-                    var htmlOutput = compiledTemplate.render({entry_id, item});
-                    $(that.el).append(htmlOutput);
-                    entry_id++;
-                })
-                
-            });
-        };
+        var View = Backbone.View.extend({
+            el: "#menu_list",
 
-        View.prototype.onclickHandler = function(){
-            //this.get
-        };
+            initialize: function() {
+                console.log("View generated");
+                this.model.on("change", this.render, this);
+            },
 
+            render: function() {
+                console.log("Rendering");
+                var that = this;
+                var menu = this.model;
+                // loop through sections
+                // build list containing all items in section
+                // build list containing such lists
+                var sectionsList = menu.getSectionsList();
+                var template = "<li class=\"menu_entry\" id=\"{{:id}}\">{{:name}} {{:price}}</li>"
+                var compiledTemplate = $.templates(template);
+                $.each(sectionsList, function(i, sectionName) {
+                    var sectionItems = menu.getSectionItems(sectionName);
+                    $.each(sectionItems, function(i, item) {
+                        var htmlOutput = compiledTemplate.render(item);
+                        $(that.el).append(htmlOutput);
+                    });
+
+                });
+                // Maintains chainability
+                return this;
+            },
+
+            onclickHandler: function() {
+                var id = this.id;
+                var item = this.model.getItemByID(id);
+                caller.itemClicked(item);
+            }
+
+        });
+
+        // Returns the View class
         return View;
+
     }
+
 );

@@ -4,7 +4,7 @@ define([],
         Item = function(name, price) {
             this.name = name;
             this.price = parseFloat(price.split(',').join('.'));
-            console.log("New item generated", this);
+            // console.log("New item generated", this);
         }
 
         Item.prototype.addNote = function(note) {
@@ -28,6 +28,10 @@ define([],
 
         Item.prototype.getName = function() {
             return this.name;
+        };
+
+        Item.prototype.setID = function(id) {
+            this.id = id;
         };
 
         return Item;

@@ -1,32 +1,35 @@
-define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'views/view'],
-    function($, Order, Item, Menu) {
+define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'views/view', 'modules/orderManager'],
+    function($, Order, Item, Menu, View) {
 
         Loader = function() {
             console.log("Loader generated");
+            // this.orderManager = new OrderManager();
         }
 
         Loader.prototype.boot = function() {
             var that = this;
             // generate menu
             var menu = new Menu();
-            var view;
-
+            var view = new View({caller: this, model: menu});
             var p = menu.loadFromFile("../../menu_parsable.csv");
-            p.then(function(){
+            p.then(function() {
                 console.log("Menu loaded from file");
-                console.log(menu);
-
-                view = new View();
-                view.populateMenu(menu);
+                
+                //view.populateMenu(menu);
                 $(".menu_entry").on("click", view.onclickHandler);
 
-                that.runOrder(menu);               
-    
+                // that.runOrder(menu);               
+
             });
         };
 
-        Loader.prototype.runOrder = function(menu){
-             // generate order
+        Loader.prototype.itemClicked = function(item){
+            //var order = this.orderManager.getCurrentOrder();
+            //order.addItem(item);
+        };
+
+        Loader.prototype.runOrder = function(menu) {
+            // generate order
             var order = new Order();
 
             var item1 = menu.getItem("margherita");
