@@ -71,6 +71,18 @@ define(["jquery", "backbone", 'papaparse', 'modules/item'],
                 return $.extend(true, {}, item);
             },
 
+            getItemByIDAndSection: function(id, sectionName) {
+                var item;
+                var section = this.getSection(sectionName);
+                $.each(section.items, function(index, value) {
+                    if (value.getID() == id) {
+                        item = value;
+                        return false;
+                    }
+                });
+                return $.extend(true, {}, item);
+            },
+
             loadFromFile: function(file) {
                 var that = this;
                 var promise = new Promise(function(resolve, reject) {

@@ -1,3 +1,7 @@
-.menu_entry{
-	cursor: pointer;
+.menu_section {
+    cursor: pointer;
+}
+
+.menu_item {
+    cursor: pointer;
 }

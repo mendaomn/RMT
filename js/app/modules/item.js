@@ -34,6 +34,10 @@ define([],
             this.id = id;
         };
 
+        Item.prototype.getID = function(id) {
+            return this.id;
+        };
+
         return Item;
     }
 );

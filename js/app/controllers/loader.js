@@ -1,29 +1,56 @@
-define(['jquery', 'modules/order', 'modules/item', 'modules/menu', 'views/view', 'modules/orderManager'],
-    function($, Order, Item, Menu, View) {
+define(['jquery',
+        'modules/order', 'modules/item', 'modules/menu',
+        'views/sectionsView', 'views/itemsView', 'views/tablesView',
+        'modules/orderManager'
+    ],
+    function($, Order, Item, Menu, SectionsView, ItemsView) {
 
         Loader = function() {
             console.log("Loader generated");
+            this.views = {};
+            this.menu = new Menu();
+            this.menuReady = this.menu.loadFromFile("../../menu_parsable.csv");
             // this.orderManager = new OrderManager();
         }
 
         Loader.prototype.boot = function() {
             var that = this;
-            // generate menu
-            var menu = new Menu();
-            var view = new View({caller: this, model: menu});
-            var p = menu.loadFromFile("../../menu_parsable.csv");
-            p.then(function() {
+            var view = new SectionsView({
+                caller: this,
+                model: this.menu
+            });
+            this.views["sectionsView"] = view;
+
+            this.menuReady.then(function() {
+                view.render();
                 console.log("Menu loaded from file");
-                
-                //view.populateMenu(menu);
-                $(".menu_entry").on("click", view.onclickHandler);
+                $("#menu_list").on("click", ".menu_section", function() {
+                    var sectionName = $(this).html();
+                    that.sectionClicked(sectionName);
+                });
+            });
 
-                // that.runOrder(menu);               
 
+        };
+
+        Loader.prototype.sectionClicked = function(sectionName) {
+            var view = new ItemsView({
+                caller: this,
+                model: this.menu
+            });
+            view.sectionName = sectionName;
+            this.views["itemsView"] = view;
+            view.render();
+            var that = this;
+            $("#menu_list").on("click", ".menu_item", function() {
+                var id = $(this).attr('id');
+                var item = that.menu.getItemByIDAndSection(id, sectionName);
+                that.itemClicked(item);
             });
         };
 
-        Loader.prototype.itemClicked = function(item){
+        Loader.prototype.itemClicked = function(item) {
+            console.log("Clicked", item);
             //var order = this.orderManager.getCurrentOrder();
             //order.addItem(item);
         };
