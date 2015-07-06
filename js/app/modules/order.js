@@ -1,7 +1,9 @@
 define(['jquery'],
     function($) {
 
-        Order = function() {
+        Order = function(room, table) {
+            this.room = room;
+            this.table = table;
             this.items = new Array();
             console.log("New order generated");
         }

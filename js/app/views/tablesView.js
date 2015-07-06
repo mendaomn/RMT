@@ -1,6 +1,6 @@
 define(["jquery", "backbone", 'jsviews'],
 
-    function($, Backbone) {
+    function($, Backbone, JSViews) {
 
         var View = Backbone.View.extend({
             el: "#tables_list",
@@ -27,14 +27,18 @@ define(["jquery", "backbone", 'jsviews'],
 
             drawItems: function(compiledTemplate) {
                 var that = this;
-                var menu = this.model;
-                console.log("Drawing items", this.sectionName);
-                var sectionItems = menu.getSectionItems(this.sectionName);
-                $.each(sectionItems, function(i, item) {
-                    var htmlOutput = compiledTemplate.render(item);
+                var tables = this.model;
+                console.log("Drawing tables");
+                var tableList = tables.getTablesList();
+                $.each(tableList, function(i, table) {
+                    var htmlOutput = compiledTemplate.render(table);
                     $(that.el).append(htmlOutput);
                 });
 
+            },
+
+            toggle: function(){
+                $(this.el).toggle();
             }
 
         });

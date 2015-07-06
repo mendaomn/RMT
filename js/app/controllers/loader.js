@@ -1,19 +1,58 @@
 define(['jquery',
         'modules/order', 'modules/item', 'modules/menu',
         'views/sectionsView', 'views/itemsView', 'views/tablesView',
-        'modules/orderManager'
+        'modules/tablesManager', 'modules/orderManager'
     ],
-    function($, Order, Item, Menu, SectionsView, ItemsView) {
+    function($, Order, Item, Menu, SectionsView, ItemsView, TablesView, TablesManager, OrderManager) {
 
         Loader = function() {
             console.log("Loader generated");
             this.views = {};
+            this.status = {};
             this.menu = new Menu();
+            this.tablesManager = new TablesManager();
             this.menuReady = this.menu.loadFromFile("../../menu_parsable.csv");
-            // this.orderManager = new OrderManager();
+            this.orderManager = new OrderManager();
         }
 
         Loader.prototype.boot = function() {
+            var that = this;
+
+            this.status.room = 0;
+            this.showTables();
+            //this.showMenu();
+
+
+        };
+
+        Loader.prototype.showTables = function() {
+            var that = this;
+            if (!this.views["tablesView"]) {
+                var view = new TablesView({
+                    caller: this,
+                    model: this.tablesManager
+                });
+                this.views["tablesView"] = view;
+            } else {
+                view = this.views["tablesView"];
+            }
+            view.render();
+
+            $("#tables_list").on("click", ".table", function() {
+                var id = $(this).attr('id');
+                var table = that.tablesManager.getTable(id);
+                that.tableClicked(table);
+            });
+        }
+
+        Loader.prototype.tableClicked = function(table) {
+            console.log("Table selected", table);
+            this.views["tablesView"].toggle();
+            this.status.table = table;
+            this.showMenu();
+        };
+
+        Loader.prototype.showMenu = function() {
             var that = this;
             var view = new SectionsView({
                 caller: this,
@@ -29,9 +68,7 @@ define(['jquery',
                     that.sectionClicked(sectionName);
                 });
             });
-
-
-        };
+        }
 
         Loader.prototype.sectionClicked = function(sectionName) {
             var view = new ItemsView({
@@ -51,8 +88,9 @@ define(['jquery',
 
         Loader.prototype.itemClicked = function(item) {
             console.log("Clicked", item);
-            //var order = this.orderManager.getCurrentOrder();
-            //order.addItem(item);
+            var order = this.orderManager.getOrder(this.status.room, this.status.table);
+            order.addItem(item);
+            console.log(order);
         };
 
         Loader.prototype.runOrder = function(menu) {
