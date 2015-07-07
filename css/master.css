@@ -1,7 +1,11 @@
-.menu_section {
+.menu_section{
     cursor: pointer;
 }
 
 .menu_item {
     cursor: pointer;
+}
+
+.table{
+	cursor: pointer;
 }

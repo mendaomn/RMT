@@ -35,6 +35,10 @@ define(["jquery", "backbone", 'jsviews'],
                     $(that.el).append(htmlOutput);
                 });
 
+            },
+
+            toggle: function(){
+                $(this.el).toggle();
             }
 
         });

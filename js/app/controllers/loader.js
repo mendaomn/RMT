@@ -54,15 +54,19 @@ define(['jquery',
 
         Loader.prototype.showMenu = function() {
             var that = this;
-            var view = new SectionsView({
-                caller: this,
-                model: this.menu
-            });
-            this.views["sectionsView"] = view;
+            var view;
+            if (!this.views["sectionsView"]) {
+                view = new SectionsView({
+                    caller: this,
+                    model: this.menu
+                });
+                this.views["sectionsView"] = view;
+            } else {
+                view = this.views["sectionsView"];
+            }
 
             this.menuReady.then(function() {
                 view.render();
-                console.log("Menu loaded from file");
                 $("#menu_list").on("click", ".menu_section", function() {
                     var sectionName = $(this).html();
                     that.sectionClicked(sectionName);
@@ -71,14 +75,22 @@ define(['jquery',
         }
 
         Loader.prototype.sectionClicked = function(sectionName) {
-            var view = new ItemsView({
-                caller: this,
-                model: this.menu
-            });
-            view.sectionName = sectionName;
-            this.views["itemsView"] = view;
-            view.render();
             var that = this;
+            var view;
+            if (!this.views["itemsView"]) {
+                view = new ItemsView({
+                    caller: this,
+                    model: this.menu
+                });
+                view.sectionName = sectionName;
+                this.views["itemsView"] = view;
+            } else {
+                view = this.views["itemsView"];
+                view.sectionName = sectionName;
+            }
+
+            view.render();
+
             $("#menu_list").on("click", ".menu_item", function() {
                 var id = $(this).attr('id');
                 var item = that.menu.getItemByIDAndSection(id, sectionName);
@@ -91,6 +103,7 @@ define(['jquery',
             var order = this.orderManager.getOrder(this.status.room, this.status.table);
             order.addItem(item);
             console.log(order);
+            this.showMenu();
         };
 
         Loader.prototype.runOrder = function(menu) {

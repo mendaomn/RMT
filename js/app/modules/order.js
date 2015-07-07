@@ -10,7 +10,6 @@ define(['jquery'],
 
         Order.prototype.addItem = function(item) {
             this.items.push(item);
-            console.log("Added ", item);
         };
 
         Order.prototype.removeItem = function(item) {
@@ -24,6 +23,14 @@ define(['jquery'],
                 sum += value.getPrice();
             });
             console.log("Total", sum);
+        }
+
+        Order.prototype.getRoom = function(){
+            return this.room;
+        }
+
+        Order.prototype.getTable = function(){
+            return this.table;
         }
 
         return Order;
