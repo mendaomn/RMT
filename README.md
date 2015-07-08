@@ -36,7 +36,7 @@ In all cases:
 
 - record interactions	
 - ask for comments
-- ask for comparison with expeted behaviour
+- ask for comparison with expected behaviour
 
 For final user:
 
