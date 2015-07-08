@@ -62,7 +62,7 @@ in case of special requests (e.g. clients wants to change an ingredient)
 
 1. order is made of items
 2. item is a menu entry
-3. item consists of name, price, [note]
+3. item consists of name, price, quantity, [note]
 
 ### Send order
 

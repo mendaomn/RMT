@@ -8,7 +8,7 @@ define(["jquery", "backbone", 'jsviews'],
             el: "#menu_list",
 
             initialize: function() {
-                console.log("View generated");
+                console.log("Sections view generated");
             },
 
             render: function() {

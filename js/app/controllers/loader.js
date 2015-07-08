@@ -18,12 +18,33 @@ define(['jquery',
         Loader.prototype.boot = function() {
             var that = this;
 
+            this.bindClick();
+
             this.status.room = 0;
             this.showTables();
-            //this.showMenu();
-
-
         };
+
+        Loader.prototype.bindClick = function(){
+            var that = this;
+            // Handle click on a menu item --> Caffe
+            $("#menu_list").on("click", ".menu_item", function() {
+                var id = $(this).attr('id');
+                var item = that.menu.getItemByIDAndSection(id, that.status.sectionName);
+                that.itemClicked(item);
+            });
+            // Handle click on a menu section --> CAFFETTERIA
+            $("#menu_list").on("click", ".menu_section", function() {
+                    var sectionName = $(this).html();
+                    that.status.sectionName = sectionName;
+                    that.sectionClicked(sectionName);
+            });
+            // Handle click on a table --> Table 3
+            $("#tables_list").on("click", ".table", function() {
+                var id = $(this).attr('id');
+                var table = that.tablesManager.getTable(id);
+                that.tableClicked(table);
+            });
+        }
 
         Loader.prototype.showTables = function() {
             var that = this;
@@ -38,11 +59,7 @@ define(['jquery',
             }
             view.render();
 
-            $("#tables_list").on("click", ".table", function() {
-                var id = $(this).attr('id');
-                var table = that.tablesManager.getTable(id);
-                that.tableClicked(table);
-            });
+            
         }
 
         Loader.prototype.tableClicked = function(table) {
@@ -67,10 +84,7 @@ define(['jquery',
 
             this.menuReady.then(function() {
                 view.render();
-                $("#menu_list").on("click", ".menu_section", function() {
-                    var sectionName = $(this).html();
-                    that.sectionClicked(sectionName);
-                });
+                
             });
         }
 
@@ -90,12 +104,6 @@ define(['jquery',
             }
 
             view.render();
-
-            $("#menu_list").on("click", ".menu_item", function() {
-                var id = $(this).attr('id');
-                var item = that.menu.getItemByIDAndSection(id, sectionName);
-                that.itemClicked(item);
-            });
         };
 
         Loader.prototype.itemClicked = function(item) {
