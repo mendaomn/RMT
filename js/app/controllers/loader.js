@@ -30,6 +30,7 @@ define(['jquery',
             $("#menu_list").on("click", ".menu_item", function() {
                 var id = $(this).attr('id');
                 var item = that.menu.getItemByIDAndSection(id, that.status.sectionName);
+                that.views["itemsView"].showQuantity(this);
                 that.itemClicked(item);
             });
             // Handle click on a menu section --> CAFFETTERIA
@@ -111,7 +112,7 @@ define(['jquery',
             var order = this.orderManager.getOrder(this.status.room, this.status.table);
             order.addItem(item);
             console.log(order);
-            this.showMenu();
+            //this.showMenu();
         };
 
         Loader.prototype.runOrder = function(menu) {

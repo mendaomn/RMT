@@ -37,6 +37,13 @@ define(["jquery", "backbone", 'jsviews'],
 
             },
 
+            showQuantity: function(li){
+                var selector = "<span class=\"quantity_selector\">-<span id=\"quantity\">1</span>+</span>"
+                $(li).append(selector);
+                $(".quantity_selector").css("float", "right");
+                $("#quantity").html(31);
+            },
+
             toggle: function(){
                 $(this.el).toggle();
             }
