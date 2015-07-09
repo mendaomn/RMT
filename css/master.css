@@ -1,17 +1,17 @@
-#tables_list, #menu_list{
-	list-style: none;
-	padding: 0;
-	background: #bdc3c7;
+#tables_list,
+#menu_list {
+    list-style: none;
+    padding: 0;
+    background: #bdc3c7;
 }
 
-.selectable_li{
+.selectable_li {
     cursor: pointer;
     padding: 10px;
     background: #f39c12;
     margin-bottom: 2px;
 }
 
-.selectable_li:hover{
-	background: #c0392b;
+.selectable_li:hover {
+    background: #c0392b;
 }
-

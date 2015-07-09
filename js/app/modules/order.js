@@ -9,7 +9,34 @@ define(['jquery'],
         };
 
         Order.prototype.addItem = function(item) {
-            this.items.push(item);
+            var found;
+            $.each(this.items, function(i, val) {
+                if (val.item.getName() == item.getName()) {
+                    found = val;
+                    return false;
+                }
+            });
+            if (found) {
+                found.quantity++;
+            } else {
+                this.items.push({
+                    item: item,
+                    quantity: 1
+                });
+            }
+        };
+
+        Order.prototype.decreaseItem = function(item) {
+            var that = this;
+            $.each(this.items, function(i, val) {
+                if (val.item.getName() == item.getName()) {
+                    if (val.quantity == 1)
+                        that.items.splice(i, 1);
+                    else
+                        val.quantity--;
+                    return false;
+                }
+            });
         };
 
         Order.prototype.removeItem = function(item) {
@@ -20,17 +47,29 @@ define(['jquery'],
         Order.prototype.computeTotal = function() {
             var sum = 0;
             $.each(this.items, function(index, value) {
-                sum += value.getPrice();
+                sum += value.item.getPrice() * value.quantity;
             });
             console.log("Total", sum);
         };
 
-        Order.prototype.getRoom = function(){
+        Order.prototype.getRoom = function() {
             return this.room;
         };
 
-        Order.prototype.getTable = function(){
+        Order.prototype.getTable = function() {
             return this.table;
+        };
+
+        Order.prototype.getQuantity = function(item) {
+            var qty;
+            $.each(this.items, function(i, val) {
+                if (val.item.getName() == item.getName()) {
+                    qty = val.quantity;
+                    return false;
+                }
+            });
+            if (qty) return qty;
+            else return 1;
         };
 
         return Order;

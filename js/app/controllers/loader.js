@@ -24,20 +24,36 @@ define(['jquery',
             this.showTables();
         };
 
-        Loader.prototype.bindClick = function(){
+        Loader.prototype.bindClick = function() {
             var that = this;
             // Handle click on a menu item --> Caffe
             $("#menu_list").on("click", ".menu_item", function() {
                 var id = $(this).attr('id');
                 var item = that.menu.getItemByIDAndSection(id, that.status.sectionName);
-                that.views["itemsView"].showQuantity(this);
-                that.itemClicked(item);
+                if (that.firstClick(this)) {
+                    that.itemClicked(item);
+                    that.views["itemsView"].showQuantity(this, that.getItemQuantity(item));
+                } else {
+                    that.itemClicked(item);
+                    that.views["itemsView"].increaseQuantity();
+                }
+                
             });
-            // Handle click on a menu section --> CAFFETTERIA
+            // Handle quantity increase and decrease buttons
+            $("#quantity_inc").on("click", function(e) {
+                that.views["itemsView"].increaseQuantity();
+                e.stopPropagation();
+            })
+            $("#menu_list").on("click", "#quantity_dec", function(e) {
+                    that.views["itemsView"].decreaseQuantity();
+                    that.decreaseItem()
+                    e.stopPropagation();
+                })
+                // Handle click on a menu section --> CAFFETTERIA
             $("#menu_list").on("click", ".menu_section", function() {
-                    var sectionName = $(this).html();
-                    that.status.sectionName = sectionName;
-                    that.sectionClicked(sectionName);
+                var sectionName = $(this).html();
+                that.status.sectionName = sectionName;
+                that.sectionClicked(sectionName);
             });
             // Handle click on a table --> Table 3
             $("#tables_list").on("click", ".table", function() {
@@ -45,7 +61,30 @@ define(['jquery',
                 var table = that.tablesManager.getTable(id);
                 that.tableClicked(table);
             });
+            // compute total
+            $('#btn-order').on("click", function() {
+                that.runOrder();
+            })
         }
+
+        Loader.prototype.firstClick = function(elem) {
+            if (!this.status.clicked || this.status.clicked.elem != elem) {
+                this.status.clicked = {
+                    elem: elem
+                };
+                return true;
+            }
+            return false;
+
+        };
+
+        Loader.prototype.decreaseItem = function() {
+            var id = $(this.status.clicked.elem).attr('id');
+            var item = this.menu.getItemByIDAndSection(id, this.status.sectionName);
+            var order = this.orderManager.getOrder(this.status.room, this.status.table);
+            order.decreaseItem(item);
+            console.log(order);
+        };
 
         Loader.prototype.showTables = function() {
             var that = this;
@@ -60,7 +99,7 @@ define(['jquery',
             }
             view.render();
 
-            
+
         }
 
         Loader.prototype.tableClicked = function(table) {
@@ -85,7 +124,7 @@ define(['jquery',
 
             this.menuReady.then(function() {
                 view.render();
-                
+
             });
         }
 
@@ -115,30 +154,18 @@ define(['jquery',
             //this.showMenu();
         };
 
+        Loader.prototype.getItemQuantity = function(item) {
+            var order = this.orderManager.getOrder(this.status.room, this.status.table);
+            return order.getQuantity(item);
+        };
+
         Loader.prototype.runOrder = function(menu) {
             // generate order
-            var order = new Order();
-
-            var item1 = menu.getItem("margherita");
-            var item2 = menu.getItem("house");
-            var item3 = menu.getItem("bIrrA1");
-            order.addItem(item1);
-            order.addItem(item2);
-            order.addItem(item3);
-
-            item2.addNote("molto ghiaccio");
-            item1.addIngredient("prosciutto");
-
-            // output 
-            console.log("Order is now", order);
+            var order = this.orderManager.getOrder(this.status.room, this.status.table);
 
             // cash register
             order.computeTotal();
-
-            console.log("sections", menu.getSectionsList());
-            console.log("items", menu.getItemsList());
         }
 
         return Loader;
-    }
-);
+    });
