@@ -50,6 +50,7 @@ define(['jquery'],
                 sum += value.item.getPrice() * value.quantity;
             });
             console.log("Total", sum);
+            return sum;
         };
 
         Order.prototype.getRoom = function() {
