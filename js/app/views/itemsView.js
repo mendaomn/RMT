@@ -3,7 +3,7 @@ define(["jquery", "backbone", 'jsviews'],
     function($, Backbone) {
 
         var View = Backbone.View.extend({
-            el: "#menu_list",
+            el: "#menu_items_list",
 
             initialize: function() {
                 console.log("Items' view generated");
@@ -58,8 +58,12 @@ define(["jquery", "backbone", 'jsviews'],
                 $('#quantity').html(parseInt(currval) - 1);
             },
 
-            toggle: function() {
-                $(this.el).toggle();
+            show: function() {
+                $(this.el).show();
+            },
+
+            hide: function() {
+                $(this.el).hide();
             }
 
         });

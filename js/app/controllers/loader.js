@@ -27,7 +27,7 @@ define(['jquery',
         Loader.prototype.bindClick = function() {
             var that = this;
             // Handle click on a menu item --> Caffe
-            $("#menu_list").on("click", ".menu_item", function() {
+            $("#menu_items_list").on("click", ".menu_item", function() {
                 var id = $(this).attr('id');
                 var item = that.menu.getItemByIDAndSection(id, that.status.sectionName);
                 if (that.firstClick(this)) {
@@ -37,23 +37,19 @@ define(['jquery',
                     that.itemClicked(item);
                     that.views["itemsView"].increaseQuantity();
                 }
-                
+
             });
-            // Handle quantity increase and decrease buttons
-            $("#quantity_inc").on("click", function(e) {
-                that.views["itemsView"].increaseQuantity();
-                e.stopPropagation();
-            })
-            $("#menu_list").on("click", "#quantity_dec", function(e) {
+            // Handle quantity decrease button
+            $("#menu_items_list").on("click", "#quantity_dec", function(e) {
                     that.views["itemsView"].decreaseQuantity();
                     that.decreaseItem()
                     e.stopPropagation();
                 })
                 // Handle click on a menu section --> CAFFETTERIA
-            $("#menu_list").on("click", ".menu_section", function() {
+            $("#menu_sections_list").on("click", ".menu_section", function() {
                 var sectionName = $(this).html();
                 that.status.sectionName = sectionName;
-                that.sectionClicked(sectionName);
+                that.showItems(sectionName);
             });
             // Handle click on a table --> Table 3
             $("#tables_list").on("click", ".table", function() {
@@ -64,7 +60,15 @@ define(['jquery',
             // compute total
             $('#btn-order').on("click", function() {
                 that.runOrder();
-            })
+            });
+            // Handle back button
+            $('#btn-back').on("click", function() {
+                if (that.showed == "items")
+                    that.showMenu();
+                else if (that.showed == "menu") {
+                    that.showTables();
+                }
+            });
         }
 
         Loader.prototype.firstClick = function(elem) {
@@ -86,8 +90,26 @@ define(['jquery',
             console.log(order);
         };
 
+        Loader.prototype.tableClicked = function(table) {
+            console.log("Table selected", table);
+            this.status.table = table;
+            this.showMenu();
+        };
+
+        Loader.prototype.show = function(viewName){
+            $.each(this.views, function(key, view){
+                if (key == viewName){
+                    view.show();
+                }
+                else{
+                    view.hide();
+                }
+            })
+        };
+
         Loader.prototype.showTables = function() {
             var that = this;
+            this.showed = "tables";
             if (!this.views["tablesView"]) {
                 var view = new TablesView({
                     caller: this,
@@ -97,20 +119,15 @@ define(['jquery',
             } else {
                 view = this.views["tablesView"];
             }
+            this.show("tablesView");
             view.render();
 
 
         }
 
-        Loader.prototype.tableClicked = function(table) {
-            console.log("Table selected", table);
-            this.views["tablesView"].toggle();
-            this.status.table = table;
-            this.showMenu();
-        };
-
         Loader.prototype.showMenu = function() {
             var that = this;
+            this.showed = "menu";
             var view;
             if (!this.views["sectionsView"]) {
                 view = new SectionsView({
@@ -121,15 +138,16 @@ define(['jquery',
             } else {
                 view = this.views["sectionsView"];
             }
-
+            this.show("sectionsView");
             this.menuReady.then(function() {
                 view.render();
 
             });
         }
 
-        Loader.prototype.sectionClicked = function(sectionName) {
+        Loader.prototype.showItems = function(sectionName) {
             var that = this;
+            this.showed = "items";
             var view;
             if (!this.views["itemsView"]) {
                 view = new ItemsView({
@@ -142,7 +160,7 @@ define(['jquery',
                 view = this.views["itemsView"];
                 view.sectionName = sectionName;
             }
-
+            this.show("itemsView");
             view.render();
         };
 

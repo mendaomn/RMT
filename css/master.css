@@ -1,5 +1,13 @@
+#rooms_list,
 #tables_list,
-#menu_list {
+#menu_sections_list,
+#menu_items_list {
+	display: none;
+}
+
+#tables_list,
+#menu_sections_list,
+#menu_items_list {
     list-style: none;
     padding: 0;
     background: #bdc3c7;

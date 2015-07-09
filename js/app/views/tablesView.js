@@ -37,8 +37,12 @@ define(["jquery", "backbone", 'jsviews'],
 
             },
 
-            toggle: function(){
-                $(this.el).toggle();
+            show: function() {
+                $(this.el).show();
+            },
+
+            hide: function() {
+                $(this.el).hide();
             }
 
         });

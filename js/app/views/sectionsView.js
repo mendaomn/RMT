@@ -5,7 +5,7 @@ define(["jquery", "backbone", 'jsviews'],
     function($, Backbone) {
 
         var View = Backbone.View.extend({
-            el: "#menu_list",
+            el: "#menu_sections_list",
 
             initialize: function() {
                 console.log("Sections view generated");
@@ -40,8 +40,12 @@ define(["jquery", "backbone", 'jsviews'],
 
             },
 
-            toggle: function(){
-                $(this.el).toggle();
+            show: function() {
+                $(this.el).show();
+            },
+
+            hide: function() {
+                $(this.el).hide();
             }
 
         });
