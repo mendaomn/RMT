@@ -7,11 +7,14 @@ define(["jquery", "backbone", 'jsviews'],
 
             initialize: function() {
                 console.log("Tables view generated");
+                
             },
 
             render: function() {
                 console.log("Rendering tables");
                 var that = this;
+
+                
 
                 $(this.el).find("li").remove();
 
@@ -28,7 +31,6 @@ define(["jquery", "backbone", 'jsviews'],
             drawItems: function(compiledTemplate) {
                 var that = this;
                 var tables = this.model;
-                console.log("Drawing tables");
                 var tableList = tables.getTablesList();
                 $.each(tableList, function(i, table) {
                     var htmlOutput = compiledTemplate.render(table);

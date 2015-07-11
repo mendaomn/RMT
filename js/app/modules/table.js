@@ -8,6 +8,10 @@ define(['jquery'],
             this.id = id;
         };
 
+        Table.prototype.getID = function() {
+            return this.id;
+        };
+
         return Table;
     }
 );

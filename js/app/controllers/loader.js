@@ -1,9 +1,11 @@
 define(['jquery',
-        'modules/order', 'modules/item', 'modules/menu',
-        'views/sectionsView', 'views/itemsView', 'views/tablesView',
-        'modules/tablesManager', 'modules/orderManager'
+        'modules/order', 'modules/item', 'modules/menu', 'modules/breadcrumbModel',
+        'views/sectionsView', 'views/itemsView', 'views/tablesView', 'views/roomsView', 'views/breadcrumb',
+        'modules/tablesManager', 'modules/orderManager', 'modules/roomsManager'
     ],
-    function($, Order, Item, Menu, SectionsView, ItemsView, TablesView, TablesManager, OrderManager) {
+    function($, Order, Item, Menu, BCModel,
+        SectionsView, ItemsView, TablesView, RoomsView, BCView,
+        TablesManager, OrderManager, RoomsManager) {
 
         Loader = function() {
             console.log("Loader generated");
@@ -11,8 +13,14 @@ define(['jquery',
             this.status = {};
             this.menu = new Menu();
             this.tablesManager = new TablesManager();
+            this.roomsManager = new RoomsManager();
             this.menuReady = this.menu.loadFromFile("../../menu_parsable.csv");
             this.orderManager = new OrderManager();
+            this.bcmodel = new BCModel();
+            this.views["bcview"] = new BCView({
+                model: this.bcmodel
+            });
+
         }
 
         Loader.prototype.boot = function() {
@@ -20,7 +28,6 @@ define(['jquery',
 
             this.bindClick();
 
-            this.status.room = 0;
             this.showTables();
         };
 
@@ -57,15 +64,22 @@ define(['jquery',
                 var table = that.tablesManager.getTable(id);
                 that.tableClicked(table);
             });
+            // Handle click on a room --> Room 1
+            $("#rooms_list").on("click", ".room", function() {
+                var id = $(this).attr('id');
+                var room = that.roomsManager.getRoom(id);
+                that.views["roomsView"].clicked(this);
+                that.roomClicked(room);
+            });
             // compute total
             $('#btn-order').on("click", function() {
                 that.runOrder();
             });
             // Handle back button
             $('#btn-back').on("click", function() {
-                if (that.showed == "items")
+                if (that.shown == "items")
                     that.showMenu();
-                else if (that.showed == "menu") {
+                else if (that.shown == "menu") {
                     that.showTables();
                 }
             });
@@ -92,16 +106,15 @@ define(['jquery',
 
         Loader.prototype.tableClicked = function(table) {
             console.log("Table selected", table);
-            this.status.table = table;
+            this.bcmodel.changeTable(table);
             this.showMenu();
         };
 
-        Loader.prototype.show = function(viewName){
-            $.each(this.views, function(key, view){
-                if (key == viewName){
+        Loader.prototype.showOnly = function(viewName) {
+            $.each(this.views, function(key, view) {
+                if (key == viewName) {
                     view.show();
-                }
-                else{
+                } else {
                     view.hide();
                 }
             })
@@ -109,7 +122,10 @@ define(['jquery',
 
         Loader.prototype.showTables = function() {
             var that = this;
-            this.showed = "tables";
+            this.shown = "tables";
+
+            // Create tables view
+
             if (!this.views["tablesView"]) {
                 var view = new TablesView({
                     caller: this,
@@ -119,15 +135,26 @@ define(['jquery',
             } else {
                 view = this.views["tablesView"];
             }
-            this.show("tablesView");
-            view.render();
 
+            // Create rooms view
+
+            if (!this.views["roomsView"]) {
+                this.views["roomsView"] = new RoomsView({
+                    caller: this,
+                    model: this.roomsManager
+                });
+            }
+
+            this.showOnly("tablesView");
+            view.render();
+            this.views["roomsView"].show();
+            this.views["roomsView"].render();
 
         }
 
         Loader.prototype.showMenu = function() {
             var that = this;
-            this.showed = "menu";
+            this.shown = "menu";
             var view;
             if (!this.views["sectionsView"]) {
                 view = new SectionsView({
@@ -138,7 +165,7 @@ define(['jquery',
             } else {
                 view = this.views["sectionsView"];
             }
-            this.show("sectionsView");
+            this.showOnly("sectionsView");
             this.menuReady.then(function() {
                 view.render();
 
@@ -147,7 +174,7 @@ define(['jquery',
 
         Loader.prototype.showItems = function(sectionName) {
             var that = this;
-            this.showed = "items";
+            this.shown = "items";
             var view;
             if (!this.views["itemsView"]) {
                 view = new ItemsView({
@@ -160,7 +187,7 @@ define(['jquery',
                 view = this.views["itemsView"];
                 view.sectionName = sectionName;
             }
-            this.show("itemsView");
+            this.showOnly("itemsView");
             view.render();
         };
 
@@ -170,6 +197,16 @@ define(['jquery',
             order.addItem(item);
             console.log(order);
             //this.showMenu();
+        };
+
+        Loader.prototype.roomClicked = function(room) {
+            console.log("Room selected", room);
+            this.bcmodel.changeRoom(room);
+        };
+
+        Loader.prototype.updateSelections = function() {
+            $('#sel_room').append(this.status.room.getID());
+            $('#sel_table').append(this.status.table.getID());
         };
 
         Loader.prototype.getItemQuantity = function(item) {
