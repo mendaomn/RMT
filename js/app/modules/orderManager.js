@@ -8,6 +8,7 @@ define(['jquery', 'modules/order'],
 
         OrderManager.prototype.addOrder = function(room, table) {
             var order = new Order(room, table);
+            console.log(room, table);
             this.orders.push(order);
             return order;
         };

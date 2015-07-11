@@ -1,10 +1,11 @@
 define(['jquery',
         'modules/order', 'modules/item', 'modules/menu', 'modules/breadcrumbModel',
         'views/sectionsView', 'views/itemsView', 'views/tablesView', 'views/roomsView', 'views/breadcrumb',
+        'views/orderView',
         'modules/tablesManager', 'modules/orderManager', 'modules/roomsManager'
     ],
     function($, Order, Item, Menu, BCModel,
-        SectionsView, ItemsView, TablesView, RoomsView, BCView,
+        SectionsView, ItemsView, TablesView, RoomsView, BCView, OrderView,
         TablesManager, OrderManager, RoomsManager) {
 
         Loader = function() {
@@ -99,9 +100,8 @@ define(['jquery',
         Loader.prototype.decreaseItem = function() {
             var id = $(this.status.clicked.elem).attr('id');
             var item = this.menu.getItemByIDAndSection(id, this.status.sectionName);
-            var order = this.orderManager.getOrder(this.status.room, this.status.table);
+            var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
             order.decreaseItem(item);
-            console.log(order);
         };
 
         Loader.prototype.tableClicked = function(table) {
@@ -193,9 +193,8 @@ define(['jquery',
 
         Loader.prototype.itemClicked = function(item) {
             console.log("Clicked", item);
-            var order = this.orderManager.getOrder(this.status.room, this.status.table);
+            var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
             order.addItem(item);
-            console.log(order);
             //this.showMenu();
         };
 
@@ -204,19 +203,26 @@ define(['jquery',
             this.bcmodel.changeRoom(room);
         };
 
-        Loader.prototype.updateSelections = function() {
-            $('#sel_room').append(this.status.room.getID());
-            $('#sel_table').append(this.status.table.getID());
-        };
-
         Loader.prototype.getItemQuantity = function(item) {
-            var order = this.orderManager.getOrder(this.status.room, this.status.table);
+            var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
             return order.getQuantity(item);
         };
 
         Loader.prototype.runOrder = function(menu) {
             // generate order
-            var order = this.orderManager.getOrder(this.status.room, this.status.table);
+            var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
+
+            if (!this.views["orderView"]) {
+                this.views["orderView"] = new OrderView({
+                    caller: this
+                });
+                this.views["orderView"].setOrder(order);
+            } else {
+                this.views["orderView"].setOrder(order);
+            }
+
+            this.views["orderView"].render();
+            this.showOnly("orderView");
 
             // cash register
             order.computeTotal();

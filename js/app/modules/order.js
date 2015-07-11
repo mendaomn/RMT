@@ -61,6 +61,10 @@ define(['jquery'],
             return this.table;
         };
 
+        Order.prototype.getItems = function(){
+            return this.items;
+        };
+
         Order.prototype.getQuantity = function(item) {
             var qty;
             $.each(this.items, function(i, val) {
