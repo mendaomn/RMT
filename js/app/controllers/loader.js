@@ -182,17 +182,19 @@ define(['jquery',
         Loader.prototype.showItems = function(sectionName) {
             var that = this;
             this.shown = "items";
-            var view;
+            var view; 
             if (!this.views["itemsView"]) {
                 view = new ItemsView({
                     caller: this,
                     model: this.menu
                 });
-                view.sectionName = sectionName;
+                if (sectionName)
+                    view.sectionName = sectionName;
                 this.views["itemsView"] = view;
             } else {
                 view = this.views["itemsView"];
-                view.sectionName = sectionName;
+                if (sectionName)
+                    view.sectionName = sectionName;
             }
             this.showOnly("itemsView");
             view.render();
