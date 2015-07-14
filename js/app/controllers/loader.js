@@ -80,8 +80,15 @@ define(['jquery',
             $('#btn-back').on("click", function() {
                 if (that.shown == "items")
                     that.showMenu();
-                else if (that.shown == "menu") {
+                else if (that.shown == "menu")
                     that.showTables();
+                else if (that.shown == "order"){
+                    if (that.last_shown == "menu")
+                        that.showMenu();
+                    if (that.last_shown == "items")
+                        that.showItems();
+                    if (that.last_shown == "tables")
+                        that.showTables(); 
                 }
             });
         }
@@ -210,6 +217,8 @@ define(['jquery',
 
         Loader.prototype.runOrder = function(menu) {
             // generate order
+            this.last_shown = this.shown;
+            this.shown = "order";
             var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
 
             if (!this.views["orderView"]) {
