@@ -21,6 +21,7 @@ define(["jquery", "backbone", 'jsviews'],
                 $.get("js/app/templates/order.tmpl", function(template) {
                     compiledTemplate = $.templates(template);
                     that.drawItems(compiledTemplate);
+                    $('#btn-send-order').show();
                 });
 
 
@@ -33,8 +34,9 @@ define(["jquery", "backbone", 'jsviews'],
                 console.log(this.order);
                 $.each(this.order.getItems(), function(i, item) {
                     var obj = {
+                        id: item.item.id,
                         name: item.item.name,
-                        quantity: item.quantity,
+                        quantity: item.quantity
                     };
                     var htmlOutput = compiledTemplate.render(obj);
                     $(that.el).append(htmlOutput);
@@ -48,10 +50,12 @@ define(["jquery", "backbone", 'jsviews'],
 
             show: function() {
                 $(this.el).show();
+                $('#btn-send-order').show();
             },
 
             hide: function() {
                 $(this.el).hide();
+                $('#btn-send-order').hide();
             }
 
         });

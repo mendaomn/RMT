@@ -40,7 +40,13 @@ define(['jquery'],
         };
 
         Order.prototype.removeItem = function(item) {
-            this.items.remove(item);
+            var that = this;
+            $.each(this.items, function(i, val) {
+                if (val.item.getName() == item.getName()) {
+                    that.items.splice(i, 1);
+                    return false;
+                }
+            });
             console.log("Removed", item);
         };
 

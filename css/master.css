@@ -46,3 +46,13 @@ body {
 #rooms_list .activeroom {
     background: #c0392b;
 }
+
+.menu_item_note{
+    padding: 0;
+    margin-left: 10px;
+    float: right;
+}
+
+#btn-send-order{
+    display: none;
+}

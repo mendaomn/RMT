@@ -47,13 +47,17 @@ define(['jquery',
                 }
 
             });
+            $("#menu_items_list").on("click", ".menu_item_note", function(e) {
+                console.log("add note");
+                e.stopPropagation();
+            });
             // Handle quantity decrease button
             $("#menu_items_list").on("click", "#quantity_dec", function(e) {
-                    that.views["itemsView"].decreaseQuantity();
-                    that.decreaseItem()
-                    e.stopPropagation();
-                })
-                // Handle click on a menu section --> CAFFETTERIA
+                that.views["itemsView"].decreaseQuantity();
+                that.decreaseItem()
+                e.stopPropagation();
+            });
+            // Handle click on a menu section --> CAFFETTERIA
             $("#menu_sections_list").on("click", ".menu_section", function() {
                 var sectionName = $(this).html();
                 that.status.sectionName = sectionName;
@@ -72,6 +76,13 @@ define(['jquery',
                 that.views["roomsView"].clicked(this);
                 that.roomClicked(room);
             });
+            // Handle click on delete item from order
+            $("#order_list").on("click", ".delete_item", function(e) {
+                var id = $(this).parent().attr('id');
+                var item = that.menu.getItemByIDAndSection(id, that.status.sectionName);
+                that.removeItem(item);
+                e.stopPropagation();
+            });
             // compute total
             $('#btn-order').on("click", function() {
                 that.runOrder();
@@ -82,13 +93,13 @@ define(['jquery',
                     that.showMenu();
                 else if (that.shown == "menu")
                     that.showTables();
-                else if (that.shown == "order"){
+                else if (that.shown == "order") {
                     if (that.last_shown == "menu")
                         that.showMenu();
                     if (that.last_shown == "items")
                         that.showItems();
                     if (that.last_shown == "tables")
-                        that.showTables(); 
+                        that.showTables();
                 }
             });
         }
@@ -182,7 +193,7 @@ define(['jquery',
         Loader.prototype.showItems = function(sectionName) {
             var that = this;
             this.shown = "items";
-            var view; 
+            var view;
             if (!this.views["itemsView"]) {
                 view = new ItemsView({
                     caller: this,
@@ -205,6 +216,11 @@ define(['jquery',
             var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
             order.addItem(item);
             //this.showMenu();
+        };
+
+        Loader.prototype.removeItem = function(item){
+            var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
+            order.removeItem(item);
         };
 
         Loader.prototype.roomClicked = function(room) {
