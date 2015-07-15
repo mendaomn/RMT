@@ -235,7 +235,8 @@ define(['jquery',
 
         Loader.prototype.runOrder = function(menu) {
             // generate order
-            this.last_shown = this.shown;
+            if (this.shown != "order")
+                this.last_shown = this.shown;
             this.shown = "order";
             var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
 
