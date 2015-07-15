@@ -54,7 +54,7 @@ define(['jquery',
             // Handle quantity decrease button
             $("#menu_items_list").on("click", "#quantity_dec", function(e) {
                 that.views["itemsView"].decreaseQuantity();
-                that.decreaseItem()
+                that.decreaseItem();
                 e.stopPropagation();
             });
             // Handle click on a menu section --> CAFFETTERIA
@@ -81,11 +81,12 @@ define(['jquery',
                 var id = $(this).parent().attr('id');
                 var item = that.menu.getItemByIDAndSection(id, that.status.sectionName);
                 that.removeItem(item);
+                that.showOrder();
                 e.stopPropagation();
             });
             // compute total
             $('#btn-order').on("click", function() {
-                that.runOrder();
+                that.showOrder();
             });
             // Handle back button
             $('#btn-back').on("click", function() {
@@ -218,7 +219,7 @@ define(['jquery',
             //this.showMenu();
         };
 
-        Loader.prototype.removeItem = function(item){
+        Loader.prototype.removeItem = function(item) {
             var order = this.orderManager.getOrder(this.bcmodel.get("room"), this.bcmodel.get("table"));
             order.removeItem(item);
         };
@@ -233,7 +234,7 @@ define(['jquery',
             return order.getQuantity(item);
         };
 
-        Loader.prototype.runOrder = function(menu) {
+        Loader.prototype.showOrder = function(menu) {
             // generate order
             if (this.shown != "order")
                 this.last_shown = this.shown;
